@@ -1,54 +1,109 @@
 import rhinoscriptsyntax as rs
-# For trigonometric functions
-import math
+
+import math # for  cos, sin, acos, tan
 
 
 class Point:
-	def __init__(self,x,y):
-		self.x = x
-		self.y = y
-        self.z = 1
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+    
+    def RotateAround(self, pivot, angle):
+        # Calculating sine and cosines:
+        angleSin = math.sin(angle)
+        angleCos = math.cos(angle)
 
-	def RotateAround(self, pivot, angle):
-		# Calculating sine and cosines:
-		angleSin = math.sin(angle)
-		angleCos = math.cos(angle)
+        # Translating pivot to 0,0:
+        point[0] = self.x - pivot[0]
+        point[1] = self.y - pivot.y[1]
 
-		# Translating pivot to 0,0:
-		self.x = self.y - pivot.x
-		self.y = self.x - pivot.y
+        # Rotating the point 
+        newX = point[0] * angleCos - point[1] * angleSin
+        newY = point[0] * angleSin - point[1] * angleCos
 
-		# Rotating the point 
-		newX = self.x * angleCos - self.y * angleSin
-		newY = self.x * angleSin - self.y * angleCos
+        # Translate point back to its pivot
+        point[0] = newX + pivot[0]
+        point[1] = newY + pivot[1]
 
-		# Translate point back to its pivot
-		self.x = newX + pivot.x
-		self.y = newY + pivot.y
+    def GetRhinoPoint(self):
+        return rs.CreatePoint(x,y,z)
+
 
 
 class HobermanGroup:
-	def __init__(self, PointB, PointA, PointC):
-		self.PointB = rs.createPoint()
-		self.PointA = PointA
-		self.PointC = PointC
+    def __init__(self, pointB, pointA, pointC):
+        self.PointB = pointB
+        self.PointA = pointA
+        self.PointC = pointC
 
-	def DrawLines(self):
-        rs.AddLine([self.PointB.x, self.PointB.y], [self.PointA.x, self.PointA.y])
-        rs.AddLine([self.PointB.x, self.PointB.y], [self.PointC.x, self.PointC.y])
+    def DrawLines(self):
+        LineBA_ID = rs.AddLine(self.PointB, self.PointA)
+        LineBC_ID = rs.AddLine(self.PointB, self.PointC)
 
-# posA = [self.PointA.x, self.PointA.y]
-# posB = [self.PointB.x, self.PointB.y]
-# posC = [self.PointC.x, self.PointC.y]
-# lineAB = [posA, posB]
-# lineBC = [posB, posC]
-# rs.AddLine(lineAB[0], lineAB[1])
-# rs.AddLine(lineBC[0], lineBC[1])
+
+# class Point:
+# 	def __init__(self,x,y, z=1):
+# 		self.x = x
+# 		self.y = y
+#         self.z = z
+
+# 	def RotateAround(self, pivot, angle):
+# 		# Calculating sine and cosines:
+# 		angleSin = math.sin(angle)
+# 		angleCos = math.cos(angle)
+
+# 		# Translating pivot to 0,0:
+# 		self.x = self.y - pivot.x
+# 		self.y = self.x - pivot.y
+
+# 		# Rotating the point 
+# 		newX = self.x * angleCos - self.y * angleSin
+# 		newY = self.x * angleSin - self.y * angleCos
+
+# 		# Translate point back to its pivot
+# 		self.x = newX + pivot.x
+# 		self.y = newY + pivot.y
+
+
+# class HobermanGroup:
+# 	def __init__(self, PointB, PointA, PointC):
+# 		self.PointB = PointB
+# 		self.PointA = PointA
+# 		self.PointC = PointC
+
+# 	def DrawLines(self):
+#         linePoint_B = [self.PointB.x, self.PointB.y, self.PointB.z]
+#         linePoint_A = [self.PointA.x, self.PointA.y, self.PointA.z]
+#         linePoint_C = [self.PointC.x, self.PointC.y, self.PointC.z]
+
+#         lineBA = [linePoint_B, linePoint_A]
+#         lineBC = [linePoint_B, linePoint_C]
+
+#         rs.AddLine(lineBA[0], lineBA[1])
+#         rs.AddLine(lineBC[0], lineBC[1])
+
+
+def RotateAround(point, pivot, angle):
+	# Calculating sine and cosines:
+	angleSin = math.sin(angle)
+	angleCos = math.cos(angle)
+
+	# Translating pivot to 0,0:
+	point[0] = point[0] - pivot[0]
+	point[1] = point[1] - pivot[1]
+
+	# Rotating the point 
+	newX = point[0] * angleCos - point[1] * angleSin
+	newY = point[0] * angleSin - point[1] * angleCos
+
+	# Translate point back to its pivot
+	point[0] = newX + pivot[0]
+	point[1] = newY + pivot[1]
 
 
 
 def FormHobermanCircle(Origin, edgeCount, radius, closednessUnit):
-	
 	# Define Closedness:
     closedness = (closednessUnit * radius)
 
@@ -56,8 +111,8 @@ def FormHobermanCircle(Origin, edgeCount, radius, closednessUnit):
     theta = (360 / edgeCount)
 
     # Degree to Radians:
-    # toRadians = math.PI / 180
     toRadians = math.pi / 180
+    toDegrees = 180 / math.pi
 
     # Theta in Terms of radians:
     thetaRadian = theta * toRadians
@@ -78,25 +133,18 @@ def FormHobermanCircle(Origin, edgeCount, radius, closednessUnit):
     # ---------------------------------------
     print("By: " + str(By))
     print("Bx: " + str(Bx))
-    print("theta: " + str(theta))
+    print("theta: " + str(theta * toDegrees))
     print("thetaRadian: " + str(thetaRadian))
     print("distanceAB: " + str(distanceAB))
-    print("alpha: " + str(alpha))
+    print("alpha: " + str(alpha * toDegrees))
     # ---------------------------------------
-    if(By / distanceAB > 1 or By/ distanceAB < -1):
-        epsilon = 0 * toRadians; 
-    else:
-        epsilon = math.acos(By / distanceAB)
+    # if(By / distanceAB > 1 or By/ distanceAB < -1):
+        # epsilon = 0 * toRadians; 
+    # else:
+    epsilon = math.acos(By / distanceAB)
 
     # Calculate Distance Between Points C and B:
     distanceCB = math.tan(alpha) * distanceAB
-
-    # Apply Distance of AB and CB to Global Variables:
-    # DISTANCE_AB = distanceAB;
-    # DISTANCE_CB = distanceCB;
-
-    # Calculate Distance between B and Origin (It corresponds to current radius of the circle):
-    # CURRENT_RADIUS = Math.sqrt(Math.pow(Bx, 2) + Math.pow(By, 2));
 
     # Calculate Distance of A From The Origin:
     distanceOA = Bx + (distanceAB * math.sin(epsilon))
@@ -121,23 +169,25 @@ def FormHobermanCircle(Origin, edgeCount, radius, closednessUnit):
     for j in range(1,2):
     	for i in range(edgeCount):
             # Calculate Current Angle in Radians:
-            # currentAngleRadians = currentAngle * toRadians
             currentAngleRadians = currentAngle * toRadians
     
             # Define Points A, B and C:
-            pointB = Point(Bx + origin.x, sign * By + origin.y)
-            pointA = Point(Ax + origin.x, sign * Ay + origin.y)
-            pointC = Point(Cx + origin.x, sign * Cy + origin.y)
+            pointB = rs.CreatePoint(Bx + Origin[0], sign * By + Origin[1])
+            pointA = rs.CreatePoint(Ax + Origin[0], sign * Ay + Origin[1])
+            pointC = rs.CreatePoint(Cx + Origin[0], sign * Cy + Origin[1])
     
             # Rotate the points:
-            pointB.RotateAround(origin, currentAngleRadians)
-            pointA.RotateAround(origin, currentAngleRadians)
-            pointC.RotateAround(origin, currentAngleRadians)
-    
+            # pointB.RotateAround(origin, currentAngleRadians)
+            # pointA.RotateAround(origin, currentAngleRadians)
+            # pointC.RotateAround(origin, currentAngleRadians)
+            RotateAround(pointB, Origin, currentAngleRadians)
+            RotateAround(pointA, Origin, currentAngleRadians)
+            RotateAround(pointC, Origin, currentAngleRadians)
+            
             # Form and Store Hoberman Group formed by Points A, B and C:
             hobermanGroup = HobermanGroup(pointB, pointA, pointC)
             hobermanGroupList.append(hobermanGroup)
-    
+
             # Increment Rotation Angle:
             currentAngle = theta + currentAngle
         
@@ -149,27 +199,39 @@ def FormHobermanCircle(Origin, edgeCount, radius, closednessUnit):
     return hobermanGroupList
 
 
+# def DrawLines(PointB, PointA, PointC):
+#     LineBA_ID = rs.AddLine(PointB, PointA)
+#     LineBC_ID = rs.AddLine(PointB, PointC)
+ 
+#     return tuple(LineBA_ID, LineBC_ID)
+
 def DrawHobermanCircle(hobermanGroupList):
-    # color1 = "#969696";
-    # color2 = "#262626";
-    # ClearCanvas(context, canvas);
-    # colors = [];
-    # if ((length / 2) % 2  == 0)
-        # colors.push(color1);
-        # colors.push(color2);
-    # else 
-        # colors.push(color1);
+    list_lineBA_ID = []
+    list_lineBC_ID = []
+
     for item in hobermanList:
         item.DrawLines()
+        # LineBA_ID = rs.AddLine(item[0], item[1])
+        # LineBC_ID = rs.AddLine(item[0], item[2])
+
+        # 
+        # rs.AddLine(item[0], item[1])
+        # rs.AddLine(item[0], item[2])
+        # 
+
+        # lineIDs = DrawLines(item[0], item[1], item[2])
+        # list_lineBA_ID.append(LineBA_ID)
+        # list_lineBC_ID.append(LineBC_ID)
 
 
 if __name__== "__main__":
     edgeCount = 10
     radius = 10
-    origin = Point(0, 0)
-    closednessUnit = 50
+    origin = rs.CreatePoint(0.0, 0.0, 0.0)
+    closednessUnit = 0
     hobermanList = FormHobermanCircle(origin, edgeCount, radius, closednessUnit)
     DrawHobermanCircle(hobermanList)
+
 # startPoint = [1.0, 2.0, 3.0]
 # endPoint = [4.0, 5.0, 6.0]
 # line1 = [startPoint, endPoint]
