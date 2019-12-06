@@ -108,22 +108,22 @@ def FormHobermanCircle(edgeCount, radius, closednessUnit):
     return hobermanArcList
 
 
-def AddPipe(hobermanArcList):
+def AddPipe(hobermanArcList, pipeRadius):
     # curve = rs.GetObject("Select curve to create pipe around", rs.filter.curve, True)
     for arc in hobermanArcList:
         domain = rs.CurveDomain(arc)
-        rs.AddPipe(arc, 0, 0.1)
+        rs.AddPipe(arc, 0, pipeRadius)
 
 
 if __name__== "__main__":
     radius = rs.GetInteger("Please enter radius for hoberman circle:", 10, 1)
     edgeCount = rs.GetInteger("Please enter edge count for hoberman circle:", 10, 9)
     closednessUnit = rs.GetInteger("Please enter percentale of circle compression:", 0, 0, 100)
+    pipeRadius = rs.GetReal("Please enter radius for surrounding pipe:", 0.01, 0.01, 3)
     # For debug.
     # radius = 10
     # edgeCount = 10
     # closednessUnit = 50
 
     hobermanArcList = FormHobermanCircle(edgeCount, radius, closednessUnit)
-    AddPipe(hobermanArcList)
-    
+    AddPipe(hobermanArcList, pipeRadius)
