@@ -91,8 +91,9 @@ def FormHobermanCircle(edgeCount, radius, closednessUnit):
 
     # debug print
     # ---------------------------------------
-    print("By: " + str(By))
-    print("Bx: " + str(Bx))
+    print("Bx: " + str(Bx), "By: " + str(By))
+    print("Ax: " + str(Ax), "Ay: " + str(Ay))
+    print("Cx: " + str(Cx), "Cy: " + str(Cy))
     print("theta: " + str(theta * toDegrees))
     print("thetaRadian: " + str(thetaRadian))
     print("distanceAB: " + str(distanceAB))
