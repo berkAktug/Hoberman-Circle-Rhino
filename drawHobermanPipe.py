@@ -50,8 +50,7 @@ def FormHobermanCircle(edgeCount, radius, closednessUnit):
     distanceCB = math.tan(alpha) * distanceAB
 
     # Define Closedness:
-    # closedness = (closednessUnit * (radius - distanceCB))
-    closedness = (radius * (closednessUnit/100))
+    closedness = (closednessUnit * (radius - distanceCB))
 
     # Calculate Point B:
     Bx = (radius - closedness) * math.cos(thetaRadian/2)
@@ -125,5 +124,5 @@ if __name__== "__main__":
     # edgeCount = 10
     # closednessUnit = 50
 
-    hobermanArcList = FormHobermanCircle(edgeCount, radius, closednessUnit)
+    hobermanArcList = FormHobermanCircle(edgeCount, radius, closednessUnit /100)
     AddPipe(hobermanArcList, pipeRadius)

@@ -61,8 +61,7 @@ def FormHobermanCircle(edgeCount, radius, closednessUnit):
     distanceCB = math.tan(alpha) * distanceAB
 
     # Define Closedness:
-    # closedness = (closednessUnit * (radius - distanceCB))
-    closedness = (radius * (closednessUnit/100))
+    closedness = (closednessUnit * (radius - distanceCB))
 
     # Calculate Point B:
     Bx = (radius - closedness) * math.cos(thetaRadian/2)
@@ -152,5 +151,5 @@ if __name__== "__main__":
     radius = rs.GetInteger("Please enter radius for hoberman circle:", 10, 1)
     edgeCount = rs.GetInteger("Please enter edge count for hoberman circle:", 10, 9)
     closednessUnit = rs.GetInteger("Please enter percentale of circle compression:", 0, 0, 100)
-    hobermanList = FormHobermanCircle(edgeCount, radius, closednessUnit)
+    hobermanList = FormHobermanCircle(edgeCount, radius, closednessUnit/100)
     DrawHobermanCircle(hobermanList)
